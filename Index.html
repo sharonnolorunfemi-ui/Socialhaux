@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Socialhaux — Social Media Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ivory: #D6D6D6;
+    --bone: #C8C8C8;
+    --charcoal: #1A1A18;
+    --ink: #2C2C2A;
+    --muted: #6A6A68;
+    --gold: #B8965A;
+    --gold-light: #D4AF80;
+    --white: #FFFFFF;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Montserrat', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--ivory); color: var(--charcoal); font-family: var(--sans); font-weight: 300; overflow-x: hidden; }
+
+nav {
+position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+display: flex; align-items: center; justify-content: center;
+padding: 24px 60px;
+background: rgba(214,214,214,0.92); backdrop-filter: blur(12px);
+border-bottom: 1px solid rgba(184,150,90,0.15);
+}
+.nav-logo { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; letter-spacing: 0.12em; color: var(--charcoal); text-decoration: none; }
+.nav-logo span { color: var(--gold); }
+
+.hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; padding-top: 88px; }
+.hero-left { display: flex; flex-direction: column; justify-content: center; padding: 80px 60px; }
+.hero-eyebrow { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 32px; opacity: 0; animation: fadeUp 1s ease forwards 0.2s; }
+.hero-headline { font-family: var(--serif); font-weight: 300; font-size: clamp(3.2rem, 5vw, 5.5rem); line-height: 1.05; color: var(--charcoal); margin-bottom: 36px; opacity: 0; animation: fadeUp 1s ease forwards 0.4s; }
+.hero-headline em { font-style: italic; color: var(--gold); }
+.hero-sub { font-size: 0.8rem; line-height: 1.9; color: var(--muted); max-width: 380px; letter-spacing: 0.04em; opacity: 0; animation: fadeUp 1s ease forwards 0.6s; }
+.hero-right { position: relative; overflow: hidden; background: var(--charcoal); opacity: 0; animation: fadeIn 1.2s ease forwards 0.5s; }
+.hero-visual { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 60px; }
+.hero-stat-block { width: 100%; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 28px 0; display: flex; align-items: baseline; gap: 16px; }
+.hero-stat-block:last-child { border-bottom: none; }
+.stat-num { font-family: var(--serif); font-size: 3.5rem; font-weight: 300; color: var(--gold-light); line-height: 1; flex-shrink: 0; }
+.stat-label { font-size: 0.6rem; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); line-height: 1.7; }
+.hero-overlay-text { position: absolute; bottom: 40px; right: 40px; font-family: var(--serif); font-size: 0.85rem; font-style: italic; color: rgba(255,255,255,0.2); letter-spacing: 0.05em; }
+
+.ticker-wrap { background: var(--gold); padding: 14px 0; overflow: hidden; white-space: nowrap; }
+.ticker-inner { display: inline-flex; animation: ticker 26s linear infinite; }
+.ticker-item { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--white); padding: 0 48px; }
+.ticker-dot { color: rgba(255,255,255,0.4); }
+
+section { padding: 120px 60px; }
+.section-label { font-size: 0.58rem; font-weight: 500; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; display: block; }
+.section-title { font-family: var(--serif); font-weight: 300; font-size: clamp(2.4rem, 3.5vw, 3.8rem); line-height: 1.1; color: var(--charcoal); margin-bottom: 20px; }
+.section-title em { font-style: italic; color: var(--gold); }
+
+.about { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; background: var(--white); }
+.about-body { font-size: 0.78rem; line-height: 2; color: var(--muted); letter-spacing: 0.03em; margin-bottom: 20px; }
+.about-skills { display: flex; flex-wrap: wrap; gap: 10px; }
+.about-skill-tag { font-size: 0.58rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(184,150,90,0.35); padding: 6px 14px; }
+.about-right { position: relative; }
+.about-card { background: var(--charcoal); padding: 48px; position: relative; }
+.about-card::before { content: ''; position: absolute; top: -12px; left: -12px; right: 12px; bottom: 12px; border: 1px solid var(--gold); pointer-events: none; }
+.about-name { font-family: var(--serif); font-size: 2rem; font-weight: 400; color: var(--white); margin-bottom: 6px; }
+.about-title-tag { font-size: 0.58rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 28px; display: block; }
+.about-achievements { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+.about-achievements li { font-size: 0.72rem; line-height: 1.8; color: rgba(255,255,255,0.55); padding-left: 18px; position: relative; }
+.about-achievements li::before { content: '◆'; position: absolute; left: 0; color: var(--gold); font-size: 0.42rem; top: 5px; }
+
+.services { background: var(--ivory); }
+.services-header { margin-bottom: 72px; }
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--bone); }
+.service-card { background: var(--ivory); padding: 48px 40px; transition: background 0.4s; cursor: default; position: relative; overflow: hidden; }
+.service-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--gold); transition: width 0.5s ease; }
+.service-card:hover::after { width: 100%; }
+.service-card:hover { background: var(--charcoal); }
+.service-card:hover .service-num { color: rgba(255,255,255,0.4); }
+.service-card:hover .service-name { color: var(--gold-light); }
+.service-card:hover .service-desc { color: rgba(255,255,255,0.5); }
+.service-num { font-family: var(--serif); font-size: 0.85rem; color: var(--gold); margin-bottom: 20px; transition: color 0.4s; }
+.service-name { font-family: var(--serif); font-size: 1.4rem; font-weight: 400; color: var(--charcoal); margin-bottom: 16px; line-height: 1.2; transition: color 0.4s; }
+.service-desc { font-size: 0.72rem; line-height: 1.9; color: var(--muted); transition: color 0.4s; }
+.service-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.service-tag { font-size: 0.55rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(184,150,90,0.3); padding: 5px 12px; }
+
+.process { background: var(--charcoal); padding: 120px 60px; }
+.process .section-label { color: var(--gold); }
+.process .section-title { color: var(--white); }
+.process-steps { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 72px; border-top: 1px solid rgba(255,255,255,0.08); }
+.process-step { padding: 48px 40px 48px 0; border-right: 1px solid rgba(255,255,255,0.08); }
+.process-step:last-child { border-right: none; padding-right: 0; }
+.process-step:not(:first-child) { padding-left: 40px; }
+.step-num { font-family: var(--serif); font-size: 4rem; font-weight: 300; color: rgba(184,150,90,0.2); line-height: 1; margin-bottom: 24px; }
+.step-title { font-family: var(--serif); font-size: 1.3rem; color: var(--white); margin-bottom: 16px; font-weight: 400; }
+.step-desc { font-size: 0.72rem; line-height: 1.9; color: rgba(255,255,255,0.4); }
+
+.results { background: var(--bone); padding: 100px 60px; }
+.results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: rgba(184,150,90,0.15); margin-top: 60px; }
+.result-card { background: var(--bone); padding: 52px 40px; text-align: center; }
+.result-num { font-family: var(--serif); font-size: 3.8rem; font-weight: 300; color: var(--gold); line-height: 1; margin-bottom: 14px; }
+.result-label { font-size: 0.65rem; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); line-height: 1.8; }
+
+.platforms { background: var(--white); text-align: center; padding: 70px 60px; }
+.platforms-label { font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; display: block; }
+.platforms-list { display: flex; align-items: center; justify-content: center; gap: 56px; flex-wrap: wrap; }
+.platform-name { font-family: var(--serif); font-size: 1.1rem; color: var(--charcoal); opacity: 0.35; font-style: italic; transition: opacity 0.3s, color 0.3s; cursor: default; }
+.platform-name:hover { opacity: 1; color: var(--gold); }
+
+.pricing { background: var(--ivory); }
+.pricing-header { margin-bottom: 72px; }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.pricing-card { border: 1px solid var(--bone); padding: 52px 40px; position: relative; transition: border-color 0.3s, box-shadow 0.3s; background: var(--white); }
+.pricing-card:hover { border-color: var(--gold); box-shadow: 0 20px 60px rgba(184,150,90,0.08); }
+.pricing-card.featured { background: var(--charcoal); border-color: var(--charcoal); }
+.pricing-card.featured:hover { border-color: var(--gold); }
+.featured-badge { position: absolute; top: -1px; right: 32px; background: var(--gold); font-size: 0.55rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white); padding: 6px 16px; }
+.pricing-tier { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: block; }
+.pricing-price { font-family: var(--serif); font-size: 2.8rem; font-weight: 300; color: var(--charcoal); line-height: 1; margin-bottom: 6px; }
+.pricing-card.featured .pricing-price { color: var(--gold-light); }
+.pricing-card.featured .pricing-period { color: rgba(255,255,255,0.4); }
+.pricing-card.featured .pricing-desc { color: rgba(255,255,255,0.45); }
+.pricing-period { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 32px; display: block; }
+.pricing-divider { height: 1px; background: var(--bone); margin-bottom: 32px; }
+.pricing-card.featured .pricing-divider { background: rgba(255,255,255,0.1); }
+.pricing-desc { font-size: 0.72rem; line-height: 1.9; color: var(--muted); margin-bottom: 32px; }
+.pricing-features { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.pricing-features li { font-size: 0.7rem; color: var(--ink); display: flex; align-items: flex-start; gap: 12px; line-height: 1.6; }
+.pricing-card.featured .pricing-features li { color: rgba(255,255,255,0.75); }
+.pricing-features li::before { content: '◆'; color: var(--gold); font-size: 0.42rem; flex-shrink: 0; margin-top: 5px; }
+
+.cta-section { background: var(--charcoal); padding: 140px 60px; text-align: center; position: relative; overflow: hidden; }
+.cta-bg-text { position: absolute; font-family: var(--serif); font-size: 18vw; font-weight: 300; font-style: italic; color: rgba(255,255,255,0.025); top: 50%; left: 50%; transform: translate(-50%, -50%); white-space: nowrap; pointer-events: none; }
+.cta-section .section-label { color: var(--gold); }
+.cta-title { font-family: var(--serif); font-size: clamp(2.8rem, 4vw, 5rem); font-weight: 300; color: var(--white); line-height: 1.1; margin-bottom: 28px; }
+.cta-title em { font-style: italic; color: var(--gold-light); }
+.cta-sub { font-size: 0.75rem; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; margin-bottom: 56px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.9; }
+.btn-cta-primary { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--charcoal); background: var(--gold); padding: 20px 48px; text-decoration: none; transition: background 0.3s; display: inline-block; }
+.btn-cta-primary:hover { background: var(--gold-light); }
+
+footer { background: #111110; padding: 60px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+.footer-logo { font-family: var(--serif); font-size: 1.3rem; color: var(--white); letter-spacing: 0.1em; }
+.footer-logo span { color: var(--gold); }
+.footer-copy { font-size: 0.62rem; color: rgba(255,255,255,0.25); letter-spacing: 0.08em; }
+.footer-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+.footer-links a { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.3s; }
+.footer-links a:hover { color: var(--gold); }
+.footer-links .plain { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+@media (max-width: 900px) {
+nav { padding: 20px 24px; }
+.hero { grid-template-columns: 1fr; }
+.hero-right { min-height: 360px; }
+.hero-left { padding: 60px 24px; }
+section { padding: 80px 24px; }
+.about { grid-template-columns: 1fr; gap: 48px; }
+.services-grid { grid-template-columns: 1fr; }
+.process-steps { grid-template-columns: 1fr 1fr; }
+.results-grid { grid-template-columns: 1fr; }
+.pricing-grid { grid-template-columns: 1fr; }
+footer { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">Social<span>haux</span></a>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <span class="hero-eyebrow">Social Media Management</span>
+    <h1 class="hero-headline">Your brand,<br /><em>elevated</em><br />everywhere.</h1>
+    <p class="hero-sub">Socialhaux is a boutique social media management service run by Sharon Olorunfemi. I partner with modern Nigerian brands to build commanding social media presences through strategy, content and community that converts.</p>
+  </div>
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="hero-stat-block">
+        <span class="stat-num">5+</span>
+        <span class="stat-label">Years of experience in<br />social media management</span>
+      </div>
+      <div class="hero-stat-block">
+        <span class="stat-num">30+</span>
+        <span class="stat-label">Campaign ready video<br />assets produced</span>
+      </div>
+      <div class="hero-stat-block">
+        <span class="stat-num">4+</span>
+        <span class="stat-label">Client brands actively<br />managed across platforms</span>
+      </div>
+      <div class="hero-stat-block">
+        <span class="stat-num">2mo</span>
+        <span class="stat-label">To 106 followers and 2,468<br />TikTok likes with zero paid ads</span>
+      </div>
+    </div>
+    <span class="hero-overlay-text">Socialhaux©️</span>
+  </div>
+</section>
+
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span class="ticker-item">Content Strategy <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Brand Development <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Community Management <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Paid Ads and Boosting <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Short Form Video <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Analytics and Reporting <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Creative Direction <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Copywriting <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Content Strategy <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Brand Development <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Community Management <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Paid Ads and Boosting <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Short Form Video <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Analytics and Reporting <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Creative Direction <span class="ticker-dot">◆</span></span>
+    <span class="ticker-item">Copywriting <span class="ticker-dot">◆</span></span>
+  </div>
+</div>
+
+<section class="about" id="about">
+  <div class="about-left reveal">
+    <span class="section-label">Who I Am</span>
+    <h2 class="section-title">I don't just post.<br />I <em>architect</em> presence.</h2>
+    <p class="about-body">I am Sharon Olorunfemi, a Social Media Specialist and Creative Professional with over 5 years of experience managing digital platforms, creating high performing content and executing growth focused campaigns.</p>
+    <p class="about-body">I have worked with brands across fashion, wellness and corporate sectors and I bring a rare combination of creative direction, strategic thinking and technical execution to every client I take on. From building a brand's social presence from scratch to running campaigns that convert across Nigeria and beyond, I deliver results.</p>
+    <div class="about-skills">
+      <span class="about-skill-tag">Canva</span>
+      <span class="about-skill-tag">CapCut</span>
+      <span class="about-skill-tag">Meta Business Suite</span>
+      <span class="about-skill-tag">MidJourney</span>
+      <span class="about-skill-tag">Runway AI</span>
+      <span class="about-skill-tag">Notion</span>
+      <span class="about-skill-tag">Copywriting</span>
+      <span class="about-skill-tag">Paid Ads</span>
+    </div>
+  </div>
+  <div class="about-right reveal">
+    <div class="about-card">
+      <p class="about-name">Sharon Olorunfemi</p>
+      <span class="about-title-tag">Social Media Specialist and Creative Professional</span>
+      <ul class="about-achievements">
+        <li>Built a TikTok account from scratch to 106 followers and 2,468 likes organically in just 2 months with zero paid ads</li>
+        <li>Grew Belle Raffineé's Instagram to 1,531 followers and 100+ posts organically as a strong fashion brand presence</li>
+        <li>Ran successful paid ads that converted to sales from within and outside Nigeria</li>
+        <li>Produced 30+ campaign ready video assets across multiple client brands</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="services-header reveal">
+    <span class="section-label">What I Do</span>
+    <h2 class="section-title">End to end social<br /><em>management</em></h2>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <span class="service-num">01</span>
+      <h3 class="service-name">Strategy and Consulting</h3>
+      <p class="service-desc">Brand voice development, audience personas, competitor analysis and platform selection tailored to your growth goals.</p>
+      <div class="service-tags"><span class="service-tag">Brand Voice</span><span class="service-tag">Audience Research</span><span class="service-tag">KPI Setting</span></div>
+    </div>
+    <div class="service-card">
+      <span class="service-num">02</span>
+      <h3 class="service-name">Content Creation</h3>
+      <p class="service-desc">Scroll stopping copy, graphic design, short form video and branded templates all crafted to your aesthetic using Canva, CapCut and AI tools.</p>
+      <div class="service-tags"><span class="service-tag">Copywriting</span><span class="service-tag">Video Editing</span><span class="service-tag">Design</span></div>
+    </div>
+    <div class="service-card">
+      <span class="service-num">03</span>
+      <h3 class="service-name">Publishing and Scheduling</h3>
+      <p class="service-desc">Editorial calendars, optimal scheduling and cross platform content adaptation so nothing falls through the cracks.</p>
+      <div class="service-tags"><span class="service-tag">Content Calendar</span><span class="service-tag">Scheduling</span></div>
+    </div>
+    <div class="service-card">
+      <span class="service-num">04</span>
+      <h3 class="service-name">Community Management</h3>
+      <p class="service-desc">Real time comment and DM management, brand monitoring, engagement outreach and crisis response so your audience always feels heard.</p>
+      <div class="service-tags"><span class="service-tag">DM Management</span><span class="service-tag">Moderation</span><span class="service-tag">Engagement</span></div>
+    </div>
+    <div class="service-card">
+      <span class="service-num">05</span>
+      <h3 class="service-name">Paid Ads and Boosting</h3>
+      <p class="service-desc">Campaign strategy, ad creative, audience targeting and budget optimization via Meta Business Suite. I have run ads that converted to sales from within and outside Nigeria.</p>
+      <div class="service-tags"><span class="service-tag">Meta Ads</span><span class="service-tag">Boosting</span><span class="service-tag">Targeting</span></div>
+    </div>
+    <div class="service-card">
+      <span class="service-num">06</span>
+      <h3 class="service-name">Analytics and Reporting</h3>
+      <p class="service-desc">Monthly performance reports, content audits and clear insights so you always know exactly what is working and what to do next.</p>
+      <div class="service-tags"><span class="service-tag">Monthly Reports</span><span class="service-tag">Growth Tracking</span></div>
+    </div>
+    <div class="service-card">
+      <span class="service-num">07</span>
+      <h3 class="service-name">Short Form Video</h3>
+      <p class="service-desc">Reels, TikToks and Shorts scripted, shot and edited to match your brand energy and the native culture of each platform.</p>
+      <div class="service-tags"><span class="service-tag">Reels</span><span class="service-tag">TikTok</span><span class="service-tag">Shorts</span></div>
+    </div>
+    <div class="service-card">
+      <span class="service-num">08</span>
+      <h3 class="service-name">Brand Development</h3>
+      <p class="service-desc">Building your social presence from scratch if you are just starting out. Brand direction, asset design, posting schedule and growth readiness all covered.</p>
+      <div class="service-tags"><span class="service-tag">Brand Direction</span><span class="service-tag">Asset Design</span></div>
+    </div>
+    <div class="service-card">
+      <span class="service-num">09</span>
+      <h3 class="service-name">Campaign Planning</h3>
+      <p class="service-desc">Full campaign playbooks from concept to execution including shoot lists tailored to your niche, timelines and post campaign reporting.</p>
+      <div class="service-tags"><span class="service-tag">Playbooks</span><span class="service-tag">Shoot Lists</span><span class="service-tag">Timelines</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div class="reveal">
+    <span class="section-label">How I Work</span>
+    <h2 class="section-title" style="color:var(--white)">A process built for<br /><em>results</em></h2>
+  </div>
+  <div class="process-steps reveal">
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <h3 class="step-title">Discovery</h3>
+      <p class="step-desc">I immerse myself in your brand. Your audience, your competitors, your voice and your ambitions. No assumptions and no shortcuts.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <h3 class="step-title">Strategy</h3>
+      <p class="step-desc">I build a custom roadmap covering platform mix, content pillars, posting cadence and 90 day growth targets aligned to your business goals.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">03</div>
+      <h3 class="step-title">Execution</h3>
+      <p class="step-desc">I create, schedule, publish and manage everything. You stay informed without being overwhelmed. You focus on your business while I handle your presence.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <h3 class="step-title">Optimize</h3>
+      <p class="step-desc">I analyze, report and continuously refine. Every month is smarter than the last, compounding your results over time.</p>
+    </div>
+  </div>
+</section>
+
+<section class="results" id="results">
+  <div class="reveal">
+    <span class="section-label">Proven Results</span>
+    <h2 class="section-title">Numbers that<br /><em>speak</em></h2>
+  </div>
+  <div class="results-grid reveal">
+    <div class="result-card">
+      <div class="result-num">1,531</div>
+      <div class="result-label">Instagram followers grown<br />organically for Belle Raffineé</div>
+    </div>
+    <div class="result-card">
+      <div class="result-num">2,468</div>
+      <div class="result-label">TikTok likes earned organically<br />in under 2 months with zero ads</div>
+    </div>
+    <div class="result-card">
+      <div class="result-num">30+</div>
+      <div class="result-label">Campaign ready video assets<br />produced across client brands</div>
+    </div>
+  </div>
+</section>
+
+<div class="platforms">
+  <span class="platforms-label">Platforms I Manage</span>
+  <div class="platforms-list">
+    <span class="platform-name">Instagram</span>
+    <span class="platform-name">TikTok</span>
+    <span class="platform-name">LinkedIn</span>
+    <span class="platform-name">X</span>
+    <span class="platform-name">Facebook</span>
+    <span class="platform-name">YouTube</span>
+    <span class="platform-name">Pinterest</span>
+  </div>
+</div>
+
+<section class="pricing" id="pricing">
+  <div class="pricing-header reveal">
+    <span class="section-label">Investment</span>
+    <h2 class="section-title">Transparent pricing.<br /><em>Real results.</em></h2>
+  </div>
+  <div class="pricing-grid reveal">
+    <div class="pricing-card">
+      <span class="pricing-tier">Starter</span>
+      <div class="pricing-price">&#x20A6;300,000</div>
+      <span class="pricing-period">per month</span>
+      <div class="pricing-divider"></div>
+      <p class="pricing-desc">For emerging brands ready to build a consistent and professional social presence from the ground up.</p>
+      <ul class="pricing-features">
+        <li>2 platforms managed</li>
+        <li>12 posts per month</li>
+        <li>Copywriting and basic graphics</li>
+        <li>Community management during business hours</li>
+        <li>Monthly performance report</li>
+        <li>Content calendar</li>
+      </ul>
+    </div>
+    <div class="pricing-card featured">
+      <span class="featured-badge">Most Popular</span>
+      <span class="pricing-tier">Growth</span>
+      <div class="pricing-price">&#x20A6;400,000</div>
+      <span class="pricing-period">per month</span>
+      <div class="pricing-divider"></div>
+      <p class="pricing-desc">For scaling brands that need full service management, content production and paid social execution.</p>
+      <ul class="pricing-features">
+        <li>4 platforms managed</li>
+        <li>15 posts per month</li>
+        <li>Full content creation including copy, design and short form video</li>
+        <li>Community management 7 days a week</li>
+        <li>Paid ads management</li>
+        <li>Bi weekly strategy calls</li>
+        <li>Monthly analytics report</li>
+      </ul>
+    </div>
+    <div class="pricing-card">
+      <span class="pricing-tier">Campaign</span>
+      <div class="pricing-price">Custom</div>
+      <span class="pricing-period">Bespoke engagement</span>
+      <div class="pricing-divider"></div>
+      <p class="pricing-desc">For brands that need a dedicated campaign launch, brand reintroduction or a full content system built from scratch.</p>
+      <ul class="pricing-features">
+        <li>Campaign strategy and full playbook</li>
+        <li>Shoot list planning tailored to your niche</li>
+        <li>All platforms covered</li>
+        <li>Short form video production</li>
+        <li>Paid ads setup and management</li>
+        <li>Post campaign analytics report</li>
+        <li>Brand direction and asset design</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="contact">
+  <span class="cta-bg-text">Socialhaux</span>
+  <div style="position:relative;z-index:1;">
+    <span class="section-label">Ready to Begin</span>
+    <h2 class="cta-title">Let's build something<br /><em>unforgettable</em></h2>
+    <p class="cta-sub">Book a free 30 minute strategy call. I will audit your current social presence and show you exactly what is possible for your brand.</p>
+    <a class="btn-cta-primary" href="https://wa.me/2349032817814" target="_blank">Chat on WhatsApp</a>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-logo">Social<span>haux</span></span>
+  <span class="footer-copy">©️ 2026 Socialhaux by Sharon Olorunfemi. All rights reserved.</span>
+  <ul class="footer-links">
+    <li><a href="https://www.instagram.com/socialhaux?igsh=bzJvbGJqazI2OGw%3D&utm_source=qr" target="_blank">Instagram</a></li>
+    <li><span class="plain">TikTok</span></li>
+    <li><a href="https://www.linkedin.com/in/sharon-olorunfemi-72765a2b4?utm_source=share_via&utm_content=profile&utm_medium=member_ios" target="_blank">LinkedIn</a></li>
+  </ul>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
